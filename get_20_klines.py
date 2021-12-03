@@ -23,7 +23,7 @@ def main():
     
     trading_pairs_20=trading_pairs[0:20]
     for item in trading_pairs_20:
-        klines = client.get_historical_klines(item[0], Client.KLINE_INTERVAL_1HOUR, "1 day ago UTC") #create a variable to store the candlestick data for the defined period
+        klines = client.get_historical_klines(item[0], Client.KLINE_INTERVAL_1HOUR, "1 day ago EAT") #create a variable to store the candlestick data for the defined period
         #Create a loop to extract and print the necessary data from the historical candlestick information
         counter=0
         for hourly_data in klines:
@@ -39,7 +39,7 @@ def main():
             pair_df=pd.DataFrame(columns=["Index","Trading_Pair","Opening Time","Opening Price","Closing Price","Volume","Closing Time","No. of Trades"], data=[kline_info])
 
             
-            daily_20_klinedf=pd.concat([daily_20_klinedf,pair_df], )
+            daily_20_klinedf=pd.concat([daily_20_klinedf,pair_df])
             with open('daily_kline_20.csv', 'a', newline='', encoding= 'utf-8') as f:
                         writer = csv.writer(f)
                         writer.writerow(kline_info)

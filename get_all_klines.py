@@ -9,7 +9,7 @@ import config
 def main():
     client = Client(config.API_KEY,config.API_SECRET) #create a client instance that retrieves the api key and secret from the config script
 
-    csv_file = open('binance_trading_pairs.csv') #Open the csv file
+    csv_file = open('binance_BTC_trading_pairs.csv') #Open the csv file
     csvreader = csv.reader(csv_file)             #read the contents of the csv file and save to a new variable
     trading_pairs = []                           #create a list called 'trading_pairs'
     header = next(csvreader)                     #Assign the first item in trading pairs the header variable
@@ -19,11 +19,13 @@ def main():
         trading_pairs.append(pair)
     
     #print(trading_pairs)                        #Print the trading_pairs list (Checkpoint)
-    daily_klinedf = pd.DataFrame(columns=["Trading_Pair","Opening Time","Opening Price","Closing Price","Volume","Closing Time","No. of Trades"])  #Create a pandas dataframe and save the trading_pairs in it
+    daily_klinedf = pd.DataFrame(columns=["Index","Trading_Pair","Opening Time","Opening Price","Closing Price","Volume","Closing Time","No. of Trades"])  #Create a pandas dataframe and save the trading_pairs in it
     for item in trading_pairs:
         klines = client.get_historical_klines(item[0], Client.KLINE_INTERVAL_1HOUR, "1 day ago UTC") #create a variable to store the candlestick data for the defined period
         #Create a loop to extract and print the necessary data from the historical candlestick information
+        counter=0
         for hourly_data in klines:
+            index = counter
             opening_time = hourly_data[0]
             opening_price = hourly_data[1]
             closing_price = hourly_data[4]
@@ -31,16 +33,16 @@ def main():
             closing_time = hourly_data[6]
             no_of_trades = hourly_data[8]
 
-            kline_info = [item[0],opening_time,opening_price,closing_price,volume,closing_time,no_of_trades]
-            pair_df=pd.DataFrame(data=[[item,opening_time,opening_price,closing_price,volume,closing_time,no_of_trades]])
+            kline_info = [index, item[0],opening_time,opening_price,closing_price,volume,closing_time,no_of_trades]
+            pair_df=pd.DataFrame(columns=["Index","Trading_Pair","Opening Time","Opening Price","Closing Price","Volume","Closing Time","No. of Trades"], data=[kline_info])
 
             
-            daily_klinedf.append(pair_df)
-            with open('daily_kline.csv', 'a', newline='', encoding= 'utf-8') as f:
+            daily_klinedf=pd.concat([daily_klinedf,pair_df],ignore_index=True)
+            with open('daily_BTC_kline.csv', 'a', newline='', encoding= 'utf-8') as f:
                         writer = csv.writer(f)
                         writer.writerow(kline_info)
-    
-    daily_klinedf.to_pickle('daily_kline_df')
+            counter+=1
+    daily_klinedf.to_pickle('daily_BTC_kline_df')
     
         
 
