@@ -7,7 +7,7 @@ import pandas as pd
 
 client = Client(config.API_KEY, config.API_SECRET)              #Create an instance of the client method that retrieves the api key and secret from the config file
 exchange_info = client.get_exchange_info()                      #Create a variable to store all information from the 'get_exchange_info' method
-trading_pairs = ['BTCUSDT']                                              #Create an empty list called trading_pairs
+trading_pairs = []                                              #Create an empty list called trading_pairs
 for s in exchange_info['symbols']:
     if s['symbol'].endswith('BTC')==True:                              #Loop through the symbols in the exchange info and append all symbols to the trading_pairs list
         trading_pairs.append(s['symbol'])
