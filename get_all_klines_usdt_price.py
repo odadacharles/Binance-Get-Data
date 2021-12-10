@@ -2,14 +2,14 @@
 #Import all relevant libraries
 import pandas as pd
 import csv
-from datetime import datetime
+from datetime import datetime, date
 from binance.client import Client
 import config
 
 def main():
     client = Client(config.API_KEY,config.API_SECRET) #create a client instance that retrieves the api key and secret from the config script
-
-    csv_file = open('binance_BTC_trading_pairs.csv') #Open the csv file
+    trading_pairs_path = 'C:/Users/Charlie.O/Documents/Python Projects/Binance Get Data/Data/'+str(date.today())+'/trading_pairs '+str(date.today())+'.csv' #This path is defined to get data from a different folder each day
+    csv_file = open(trading_pairs_path) #Open the csv file
     csvreader = csv.reader(csv_file)             #read the contents of the csv file and save to a new variable
     trading_pairs = []                           #create a list called 'trading_pairs'
     header = next(csvreader)                     #Assign the first item in trading pairs the header variable
@@ -20,7 +20,7 @@ def main():
     
     #print(trading_pairs)                        #Print the trading_pairs list (Checkpoint)
     col_list = ["Index","Trading_Pair","Opening Time","Opening Price","Closing Price","Volume","Closing Time","No. of Trades"] #create a list of the column names in the BTCUSDT csv file
-    usd_pricesdf=pd.read_csv('daily_BTCUSDT_kline.csv', usecols=col_list) #Read the values in the csv file into a dataframe
+    usd_pricesdf=pd.read_csv('C:/Users/Charlie.O/Documents/Python Projects/Binance Get Data/Data/'+str(date.today())+'/daily_BTCUSDT_kline.csv', usecols=col_list) #Read the values in the csv file into a dataframe
 
     daily_klinedf = pd.DataFrame(columns=["Index","Trading_Pair","Opening Time","Opening Price","Closing Price","Volume","Closing Time","No. of Trades"])  #Create a pandas dataframe and save the trading_pairs in it
     
@@ -48,12 +48,12 @@ def main():
             pair_df=pd.DataFrame(columns=["Index","Trading_Pair","Opening Time","Opening Price","Closing Price","Volume","Closing Time","No. of Trades"], data=[kline_info])
             daily_klinedf=pd.concat([daily_klinedf,pair_df],ignore_index=True)
 
-            #Save the data above to a csv file as well
-            with open('daily_BTC_kline.csv', 'a', newline='', encoding= 'utf-8') as f:
+            #Save the data above to a csv file as well. This path will save to a different folder every day
+            with open('C:/Users/Charlie.O/Documents/Python Projects/Binance Get Data/Data/'+str(date.today())+'/daily_BTC_kline.csv', 'a', newline='', encoding= 'utf-8') as f:
                         writer = csv.writer(f)
                         writer.writerow(kline_info)
             counter+=1
-    daily_klinedf.to_pickle('daily_BTC_kline_df') #pickle the 'daily_klinedf' to save the dataframe locally
+    daily_klinedf.to_pickle('C:/Users/Charlie.O/Documents/Python Projects/Binance Get Data/Data/'+str(date.today())+'/daily_BTC_kline_df') #pickle the 'daily_klinedf' to save the dataframe locally
     
         
 

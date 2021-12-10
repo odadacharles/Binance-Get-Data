@@ -2,7 +2,7 @@
 #Import all relevant libraries
 import pandas as pd
 import csv
-from datetime import datetime
+from datetime import datetime, date
 from binance.client import Client
 import config
 
@@ -14,7 +14,7 @@ def main():
         #Create a loop to extract and print the necessary data from the historical candlestick information
     counter = 0
     #Create a CSV file and write in the names of the relevant columns
-    with open('daily_BTCUSDT_kline.csv', 'a', newline='', encoding= 'utf-8') as f: 
+    with open('C:/Users/Charlie.O/Documents/Python Projects/Binance Get Data/Data/'+str(date.today())+'/daily_BTCUSDT_kline.csv', 'a', newline='', encoding= 'utf-8') as f: 
                     writer = csv.writer(f)
                     writer.writerow(["Index","Trading_Pair","Opening Time","Opening Price","Closing Price","Volume","Closing Time","No. of Trades"])
 
@@ -34,7 +34,7 @@ def main():
         #Concatenate the dataframe created above with the main dataframe
         daily_klinedf=pd.concat([daily_klinedf,pair_df],ignore_index=True)
         #Save the data above to the csv file
-        with open('daily_BTCUSDT_kline.csv', 'a', newline='', encoding= 'utf-8') as f:
+        with open('C:/Users/Charlie.O/Documents/Python Projects/Binance Get Data/Data/'+str(date.today())+'/daily_BTCUSDT_kline.csv', 'a', newline='', encoding= 'utf-8') as f:
                     writer = csv.writer(f)
                     writer.writerow(kline_info)
         counter+=1
